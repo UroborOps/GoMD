@@ -9,7 +9,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/nroitero/gomd/backend/internal/config"
+	"github.com/UroborOps/GoMD/backend/internal/config"
 )
 
 // QdrantStore implements vector storage backed by an external Qdrant database.

@@ -11,7 +11,10 @@ GoMD is a blazing-fast, self-hosted Markdown environment built to be your ultima
 ## 🚀 Why GoMD?
 
 ### 🧠 Your Ultimate AI Memory
-Turn your notes into an active brain. GoMD natively integrates with **Qdrant** and local LLMs (via Llama.cpp) to index your thoughts. Instantly chat with your vault, find semantic relationships across thousands of documents, and let AI retrieve exactly what you need, when you need it.
+Turn your notes into an active brain. GoMD isn't just for humans—it's built to be the perfect long-term memory for AI agents. 
+- **Built-in MCP Server**: GoMD ships with a native Model Context Protocol (MCP) server (`mcp/`). Attach it to Claude Desktop, Cursor, or any MCP-compatible agent, and let the AI instantly read, search, **write**, and autonomously organize your entire vault. Your agents can actively manage and expand your knowledge base.
+- **Headless Agent Mode**: Don't need a UI? Set `GOMD_DISABLE_UI=true` and GoMD transforms into a purely headless memory microservice. AI agents can use it entirely behind the scenes to store and extract memories for autonomous workflows.
+- **Local RAG & Semantic Search**: Natively integrates with **Qdrant** and local LLMs (via Llama.cpp) to index your thoughts. Find semantic relationships across thousands of documents instantly.
 
 ### 🌍 Take Obsidian Anywhere
 Already use Obsidian? Perfect. Point GoMD at your existing Obsidian vault, and instantly access all your notes, backlinks, and graph views from any browser, anywhere in the world—with zero vendor lock-in.
@@ -39,7 +42,7 @@ Written entirely in Go with a lightweight React + Vite frontend, GoMD handles th
 Want to spin it up in seconds? We ship a single-binary Docker container with the frontend completely embedded!
 
 ```bash
-docker run -p 3000:3000 -v ./my-vault:/app/vault ghcr.io/nroitero/gomd:latest
+docker run -p 3000:3000 -v ./my-vault:/app/vault ghcr.io/uroborops/gomd:latest
 ```
 
 ## 📖 Documentation
@@ -47,3 +50,5 @@ docker run -p 3000:3000 -v ./my-vault:/app/vault ghcr.io/nroitero/gomd:latest
 Ready to unlock full AI capabilities, local LLMs, and automated backups? 
 
 👉 **[Dive into the Full Technical Documentation](docs/technical-details.md)** to set up the complete Docker Compose stack and learn about advanced configuration options.
+
+🤖 **[Agent Integration Guide (MCP)](docs/agent-integration.md)**: Learn how to connect Claude Desktop, Cursor, and custom AI agents directly to your vault.

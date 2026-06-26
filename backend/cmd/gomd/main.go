@@ -9,9 +9,9 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/nroitero/gomd/backend/internal/config"
-	"github.com/nroitero/gomd/backend/internal/gitsync"
-	"github.com/nroitero/gomd/backend/internal/server"
+	"github.com/UroborOps/GoMD/backend/internal/config"
+	"github.com/UroborOps/GoMD/backend/internal/gitsync"
+	"github.com/UroborOps/GoMD/backend/internal/server"
 )
 
 func main() {

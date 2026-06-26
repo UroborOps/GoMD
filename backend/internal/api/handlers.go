@@ -13,11 +13,11 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/nroitero/gomd/backend/internal/config"
-	"github.com/nroitero/gomd/backend/internal/graph"
-	"github.com/nroitero/gomd/backend/internal/indexer"
-	"github.com/nroitero/gomd/backend/internal/locks"
-	"github.com/nroitero/gomd/backend/internal/search"
+	"github.com/UroborOps/GoMD/backend/internal/config"
+	"github.com/UroborOps/GoMD/backend/internal/graph"
+	"github.com/UroborOps/GoMD/backend/internal/indexer"
+	"github.com/UroborOps/GoMD/backend/internal/locks"
+	"github.com/UroborOps/GoMD/backend/internal/search"
 )
 
 // linkInfoFromIndexer converts indexer.Link slice to graph.LinkInfo slice.

@@ -18,3 +18,8 @@ vault/
 
 # Config
 config.toml
+
+# Docker Volumes
+qdrant_data/
+s3_data/
+models/

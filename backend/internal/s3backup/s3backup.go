@@ -16,7 +16,7 @@ import (
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
-	gomdcfg "github.com/nroitero/gomd/backend/internal/config"
+	gomdcfg "github.com/UroborOps/GoMD/backend/internal/config"
 )
 
 // Start initializes the S3 backup worker.

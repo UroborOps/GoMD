@@ -10,7 +10,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/nroitero/gomd/backend/internal/config"
+	"github.com/UroborOps/GoMD/backend/internal/config"
 )
 
 // Start initializes the git repository and starts the background sync worker.

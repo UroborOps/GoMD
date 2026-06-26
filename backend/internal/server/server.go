@@ -7,16 +7,16 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/nroitero/gomd/backend/internal/api"
-	"github.com/nroitero/gomd/backend/internal/config"
-	"github.com/nroitero/gomd/backend/internal/fsnotify"
-	"github.com/nroitero/gomd/backend/internal/gitsync"
-	"github.com/nroitero/gomd/backend/internal/indexer"
-	"github.com/nroitero/gomd/backend/internal/locks"
-	"github.com/nroitero/gomd/backend/internal/mcp"
-	"github.com/nroitero/gomd/backend/internal/s3backup"
-	"github.com/nroitero/gomd/backend/internal/search"
-	"github.com/nroitero/gomd/backend/internal/static"
+	"github.com/UroborOps/GoMD/backend/internal/api"
+	"github.com/UroborOps/GoMD/backend/internal/config"
+	"github.com/UroborOps/GoMD/backend/internal/fsnotify"
+	"github.com/UroborOps/GoMD/backend/internal/gitsync"
+	"github.com/UroborOps/GoMD/backend/internal/indexer"
+	"github.com/UroborOps/GoMD/backend/internal/locks"
+	"github.com/UroborOps/GoMD/backend/internal/mcp"
+	"github.com/UroborOps/GoMD/backend/internal/s3backup"
+	"github.com/UroborOps/GoMD/backend/internal/search"
+	"github.com/UroborOps/GoMD/backend/internal/static"
 )
 
 // Server holds the HTTP server and its components.

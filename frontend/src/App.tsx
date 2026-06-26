@@ -338,7 +338,7 @@ export default function App() {
               <div style={{ width: '1px', background: 'var(--border-color)', margin: '0 4px' }} />
               
               <a
-                href="https://github.com/nroitero/gomd"
+                href="https://github.com/UroborOps/GoMD"
                 target="_blank"
                 rel="noopener noreferrer"
                 title="GoMD GitHub Repo"

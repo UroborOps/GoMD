@@ -6,9 +6,9 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/nroitero/gomd/backend/internal/config"
-	"github.com/nroitero/gomd/backend/internal/embeddings"
-	"github.com/nroitero/gomd/backend/internal/indexer"
+	"github.com/UroborOps/GoMD/backend/internal/config"
+	"github.com/UroborOps/GoMD/backend/internal/embeddings"
+	"github.com/UroborOps/GoMD/backend/internal/indexer"
 )
 
 // Result represents a single search result.

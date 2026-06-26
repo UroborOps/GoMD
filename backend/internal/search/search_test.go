@@ -5,7 +5,8 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/nroitero/gomd/backend/internal/indexer"
+	"github.com/UroborOps/GoMD/backend/internal/config"
+	"github.com/UroborOps/GoMD/backend/internal/indexer"
 )
 
 func TestSearch_FindsMatchingFiles(t *testing.T) {
@@ -28,7 +29,7 @@ func TestSearch_FindsMatchingFiles(t *testing.T) {
 		t.Fatalf("IndexFiles: %v", err)
 	}
 
-	s := NewSearcher(idx)
+	s := NewSearcher(idx, &config.Config{})
 	s.Rebuild()
 
 	// Search for "Hello"
@@ -75,7 +76,7 @@ tags: [important, review]
 		t.Fatalf("IndexFiles: %v", err)
 	}
 
-	s := NewSearcher(idx)
+	s := NewSearcher(idx, &config.Config{})
 	s.Rebuild()
 
 	results, err := s.Search("tag:important", 10)
@@ -93,7 +94,7 @@ tags: [important, review]
 
 func TestSearch_EmptyQuery(t *testing.T) {
 	idx := indexer.NewIndexer()
-	s := NewSearcher(idx)
+	s := NewSearcher(idx, &config.Config{})
 
 	results, err := s.Search("", 10)
 	if err != nil {
@@ -120,7 +121,7 @@ func TestSearch_NoMatch(t *testing.T) {
 		t.Fatalf("IndexFiles: %v", err)
 	}
 
-	s := NewSearcher(idx)
+	s := NewSearcher(idx, &config.Config{})
 	s.Rebuild()
 
 	results, err := s.Search("xyznonexistent", 10)
@@ -154,7 +155,7 @@ func TestSearch_MultipleTermMatch(t *testing.T) {
 		t.Fatalf("IndexFiles: %v", err)
 	}
 
-	s := NewSearcher(idx)
+	s := NewSearcher(idx, &config.Config{})
 	s.Rebuild()
 
 	results, err := s.Search("hello world", 10)

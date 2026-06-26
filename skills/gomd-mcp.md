@@ -1,19 +1,18 @@
 ---
-name: gomd-hermes-mcp
-description: Hermes MCP plugin development for GoMD — expose vault operations as MCP tools and resources for AI agent integration
-tags: [gomd, hermes, mcp]
+name: gomd-mcp
+description: MCP server development for GoMD — expose vault operations as MCP tools and resources for AI agent integration
+tags: [gomd, mcp]
 ---
 
-# GoMD Hermes MCP Skill
+# GoMD MCP Skill
 
-Create a Model Context Protocol (MCP) server that exposes GoMD vault operations to AI agents (Hermes).
+Create a Model Context Protocol (MCP) server that exposes GoMD vault operations to AI agents.
 
 ## MCP Server Structure
 
 ```
-plugins/hermes/
-  gomd-mcp/
-    main.py          — MCP server entry point
+mcp/
+  main.py          — MCP server entry point
     gomd.py          — MCP tools and resources
     requirements.txt — dependencies (httpx or urllib)
 ```
@@ -162,22 +161,23 @@ The MCP server reads config from:
 }
 ```
 
-## Integration with Hermes
+## Integration
 
-Add to Hermes config as a skill or MCP plugin:
+Add to your MCP client config (e.g., Claude Desktop, Cursor):
 
-```yaml
-# In hermes config
-plugins:
-  mcp:
-    gomd:
-      command: python
-      args: ["/home/nroitero/.hermes/gomd/plugins/hermes/gomd-mcp/main.py"]
-      env:
-        GOMD_URL: "http://192.168.1.XXX:3000"
+```json
+{
+  "mcpServers": {
+    "gomd": {
+      "command": "python",
+      "args": ["~/code/gomd/mcp/main.py"],
+      "env": {
+        "GOMD_URL": "http://192.168.1.XXX:3000"
+      }
+    }
+  }
+}
 ```
-
-Or as a Hermes skill that wraps the MCP calls.
 
 ## Error Handling
 

@@ -5,7 +5,7 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/nroitero/gomd/backend/internal/indexer"
+	"github.com/UroborOps/GoMD/backend/internal/indexer"
 )
 
 func buildGraph(dir string) (*Graph, error) {

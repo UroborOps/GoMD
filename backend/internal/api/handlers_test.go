@@ -9,9 +9,10 @@ import (
 	"path/filepath"
 	"testing"
 
-	"github.com/nroitero/gomd/backend/internal/config"
-	"github.com/nroitero/gomd/backend/internal/indexer"
-	"github.com/nroitero/gomd/backend/internal/search"
+	"github.com/UroborOps/GoMD/backend/internal/config"
+	"github.com/UroborOps/GoMD/backend/internal/indexer"
+	"github.com/UroborOps/GoMD/backend/internal/locks"
+	"github.com/UroborOps/GoMD/backend/internal/search"
 )
 
 func setupTestEnv(t *testing.T) (string, *Handlers, func()) {
@@ -39,12 +40,13 @@ func setupTestEnv(t *testing.T) (string, *Handlers, func()) {
 		t.Fatalf("IndexFiles: %v", err)
 	}
 
-	s := search.NewSearcher(idx)
+	cfg := &config.Config{Host: "0.0.0.0", Port: 3000}
+	s := search.NewSearcher(idx, cfg)
 	s.Rebuild()
 
 	broadcaster := NewBroadcaster()
-	cfg := &config.Config{Host: "0.0.0.0", Port: 3000}
-	h := NewHandlers(dir, broadcaster, idx, s, cfg)
+	lm := locks.NewManager(dir)
+	h := NewHandlers(dir, broadcaster, idx, s, cfg, lm)
 
 	return dir, h, func() { os.RemoveAll(dir) }
 }
@@ -137,7 +139,7 @@ func TestSearchHandler_ReturnsContentField(t *testing.T) {
 	}
 }
 
-func TestGraphHandler_ReturnsEdgesWithFromTo(t *testing.T) {
+func TestGraphHandler_ReturnsEdgesWithSourceTarget(t *testing.T) {
 	_, h, cleanup := setupTestEnv(t)
 	defer cleanup()
 
@@ -162,17 +164,17 @@ func TestGraphHandler_ReturnsEdgesWithFromTo(t *testing.T) {
 		t.Skip("no edges, test not applicable")
 	}
 
-	// Verify edges use 'from'/'to' keys (not 'source'/'target')
+	// Verify edges use 'source'/'target' keys
 	for i, e := range edges {
 		edge, ok := e.(map[string]interface{})
 		if !ok {
 			t.Fatalf("edge[%d] is not a map", i)
 		}
-		if _, hasFrom := edge["from"]; !hasFrom {
-			t.Errorf("edge[%d] missing 'from' field (has: %v)", i, keysOf(edge))
+		if _, hasSource := edge["source"]; !hasSource {
+			t.Errorf("edge[%d] missing 'source' field (has: %v)", i, keysOf(edge))
 		}
-		if _, hasTo := edge["to"]; !hasTo {
-			t.Errorf("edge[%d] missing 'to' field (has: %v)", i, keysOf(edge))
+		if _, hasTarget := edge["target"]; !hasTarget {
+			t.Errorf("edge[%d] missing 'target' field (has: %v)", i, keysOf(edge))
 		}
 	}
 }

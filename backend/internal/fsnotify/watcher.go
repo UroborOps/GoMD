@@ -11,8 +11,8 @@ import (
 	"time"
 
 	"github.com/fsnotify/fsnotify"
-	"github.com/nroitero/gomd/backend/internal/api"
-	"github.com/nroitero/gomd/backend/internal/indexer"
+	"github.com/UroborOps/GoMD/backend/internal/api"
+	"github.com/UroborOps/GoMD/backend/internal/indexer"
 )
 
 // Watcher monitors the vault directory for file changes and dispatches events.

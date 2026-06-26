@@ -11,9 +11,9 @@ import (
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
 
-	"github.com/nroitero/gomd/backend/internal/indexer"
-	"github.com/nroitero/gomd/backend/internal/locks"
-	"github.com/nroitero/gomd/backend/internal/search"
+	"github.com/UroborOps/GoMD/backend/internal/indexer"
+	"github.com/UroborOps/GoMD/backend/internal/locks"
+	"github.com/UroborOps/GoMD/backend/internal/search"
 )
 
 // Server wraps the MCP SDK server and connects it to GoMD state.
@@ -41,30 +41,30 @@ func New(vaultPath string, idx *indexer.Indexer, sr *search.Searcher, lm *locks.
 		locks:     lm,
 	}
 
-	// Register read_file
-	readTool := mcp.NewTool("read_file",
+	// Register gomd_read_file
+	readTool := mcp.NewTool("gomd_read_file",
 		mcp.WithDescription("Read the contents of a markdown file in the vault."),
 		mcp.WithString("path", mcp.Required(), mcp.Description("Relative path to the file (e.g., 'notes/idea.md')")),
 	)
 	mcpServer.AddTool(readTool, s.handleReadFile)
 
-	// Register write_file
-	writeTool := mcp.NewTool("write_file",
+	// Register gomd_write_file
+	writeTool := mcp.NewTool("gomd_write_file",
 		mcp.WithDescription("Create or update a markdown file in the vault."),
 		mcp.WithString("path", mcp.Required(), mcp.Description("Relative path to the file")),
 		mcp.WithString("content", mcp.Required(), mcp.Description("Markdown content to write")),
 	)
 	mcpServer.AddTool(writeTool, s.handleWriteFile)
 
-	// Register search
-	searchTool := mcp.NewTool("search",
+	// Register gomd_search
+	searchTool := mcp.NewTool("gomd_search",
 		mcp.WithDescription("Search the vault for files containing a specific query."),
 		mcp.WithString("query", mcp.Required(), mcp.Description("Text to search for")),
 	)
 	mcpServer.AddTool(searchTool, s.handleSearch)
 
-	// Register list_backlinks
-	backlinksTool := mcp.NewTool("list_backlinks",
+	// Register gomd_list_backlinks
+	backlinksTool := mcp.NewTool("gomd_list_backlinks",
 		mcp.WithDescription("List all files that link to a given file."),
 		mcp.WithString("path", mcp.Required(), mcp.Description("Relative path to the file to check for backlinks")),
 	)

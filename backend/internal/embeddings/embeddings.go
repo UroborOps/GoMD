@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/nroitero/gomd/backend/internal/config"
+	"github.com/UroborOps/GoMD/backend/internal/config"
 )
 
 // Store defines the interface for vector databases.

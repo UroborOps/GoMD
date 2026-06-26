@@ -1,4 +1,4 @@
-module github.com/nroitero/gomd/backend
+module github.com/UroborOps/GoMD/backend
 
 go 1.25.5
 
