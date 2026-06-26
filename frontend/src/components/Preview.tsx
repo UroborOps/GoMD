@@ -3,6 +3,34 @@ import ReactMarkdown from 'react-markdown';
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
 import remarkGfm from 'remark-gfm';
+import mermaid from 'mermaid';
+
+mermaid.initialize({
+  startOnLoad: false,
+  theme: 'dark',
+  securityLevel: 'loose',
+});
+
+const Mermaid = ({ chart }: { chart: string }) => {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (ref.current && chart) {
+      const id = 'mermaid-' + Math.random().toString(36).substr(2, 9);
+      mermaid.render(id, chart).then(({ svg }) => {
+        if (ref.current) {
+          ref.current.innerHTML = svg;
+        }
+      }).catch(e => {
+        if (ref.current) {
+          ref.current.innerHTML = `<pre style="color:red">${e.message}</pre>`;
+        }
+      });
+    }
+  }, [chart]);
+
+  return <div className="mermaid" ref={ref} style={{ display: 'flex', justifyContent: 'center', margin: '1rem 0' }} />;
+};
 
 interface PreviewProps {
   style?: CSSProperties;
@@ -71,19 +99,30 @@ export default function Preview({ style, content, onNavigate }: PreviewProps) {
               </a>
             );
           },
-          code: ({ children }) => (
-            <code
-              style={{
-                background: 'var(--bg-primary)',
-                padding: '2px 6px',
-                borderRadius: '3px',
-                fontFamily: "'SF Mono', 'Fira Code', monospace",
-                fontSize: '0.9em'
-              }}
-            >
-              {children}
-            </code>
-          ),
+          code: ({ className, children, ...props }: any) => {
+            const match = /language-(\w+)/.exec(className || '');
+            const isMermaid = match && match[1] === 'mermaid';
+
+            if (isMermaid) {
+              return <Mermaid chart={String(children).replace(/\n$/, '')} />;
+            }
+
+            return (
+              <code
+                className={className}
+                style={{
+                  background: 'var(--bg-primary)',
+                  padding: '2px 6px',
+                  borderRadius: '3px',
+                  fontFamily: "'SF Mono', 'Fira Code', monospace",
+                  fontSize: '0.9em'
+                }}
+                {...props}
+              >
+                {children}
+              </code>
+            );
+          },
           pre: ({ children }) => (
             <pre
               style={{
