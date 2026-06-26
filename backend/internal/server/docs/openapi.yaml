@@ -1,0 +1,224 @@
+openapi: 3.0.3
+info:
+  title: GoMD API
+  description: API for managing a self-hosted markdown knowledge base with real-time SSE updates and MCP integration.
+  version: 1.0.0
+servers:
+  - url: http://localhost:3000
+    description: Default local development server
+
+paths:
+  /api/files:
+    get:
+      summary: List all files
+      responses:
+        '200':
+          description: Successful response
+    post:
+      summary: Create a new file
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                path:
+                  type: string
+                  description: Path to the new file relative to vault root
+                content:
+                  type: string
+                  description: File content
+      responses:
+        '201':
+          description: File created
+
+  /api/files/{path}:
+    parameters:
+      - name: path
+        in: path
+        required: true
+        schema:
+          type: string
+        description: Relative path to the markdown file
+    get:
+      summary: Get file content
+      responses:
+        '200':
+          description: File content and parsed frontmatter
+    put:
+      summary: Update file content
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                content:
+                  type: string
+      responses:
+        '200':
+          description: File updated
+    delete:
+      summary: Delete a file
+      responses:
+        '200':
+          description: File deleted
+
+  /api/folders:
+    get:
+      summary: List root directory contents
+      responses:
+        '200':
+          description: Returns files and directories
+    post:
+      summary: Create a new directory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                path:
+                  type: string
+      responses:
+        '201':
+          description: Directory created
+
+  /api/folders/{path}:
+    parameters:
+      - name: path
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: List contents of a specific directory
+      responses:
+        '200':
+          description: Returns files and directories
+    delete:
+      summary: Delete a directory
+      responses:
+        '200':
+          description: Directory deleted
+
+  /api/rename:
+    post:
+      summary: Rename or move a file/directory
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                oldPath:
+                  type: string
+                newPath:
+                  type: string
+      responses:
+        '200':
+          description: Renamed successfully
+
+  /api/search:
+    get:
+      summary: Search the vault
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Search results
+
+  /api/backlinks/{path}:
+    parameters:
+      - name: path
+        in: path
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Get backlinks for a file
+      responses:
+        '200':
+          description: List of files that link to the requested path
+
+  /api/graph:
+    get:
+      summary: Get full vault knowledge graph
+      responses:
+        '200':
+          description: Graph nodes and edges (source/target links)
+
+  /api/config:
+    get:
+      summary: Get vault configuration
+      responses:
+        '200':
+          description: Returns config settings
+
+  /api/tree:
+    get:
+      summary: Get full file tree structure
+      responses:
+        '200':
+          description: JSON tree representation of the vault
+
+  /api/locks:
+    get:
+      summary: Get all file/folder locks
+      responses:
+        '200':
+          description: Map of locked paths
+    post:
+      summary: Lock or unlock a path
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                path:
+                  type: string
+                locked:
+                  type: boolean
+      responses:
+        '200':
+          description: Lock status updated
+
+  /events:
+    get:
+      summary: Server-Sent Events stream for vault updates
+      description: Connect using an EventSource client to receive real-time updates when files are modified.
+      responses:
+        '200':
+          description: SSE text/event-stream connection
+
+  /mcp/sse:
+    get:
+      summary: Model Context Protocol (MCP) SSE Connection
+      description: Endpoint for AI agents to connect via the MCP Server-Sent Events transport.
+      responses:
+        '200':
+          description: MCP SSE text/event-stream connection
+
+  /mcp/message:
+    post:
+      summary: Model Context Protocol (MCP) JSON-RPC
+      description: Endpoint for AI agents to send JSON-RPC messages/tool calls over HTTP.
+      responses:
+        '200':
+          description: Message received

@@ -1,0 +1,110 @@
+services:
+  traefik:
+    image: traefik:latest
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    ports:
+      - "80:80"
+      - "8501:8080" # Traefik Dashboard
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+    restart: unless-stopped
+
+  gomd:
+    image: test
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile
+    ports:
+      - "8502:3000"
+    volumes:
+      - ./vault:/app/vault
+    environment:
+      - GOMD_PORT=3000
+      - GOMD_HOST=0.0.0.0
+      # RAG Settings
+      - GOMD_RAG_ENABLED=true
+      - GOMD_OPENAI_API_URL=http://llama-cpp:8080/v1
+      - GOMD_EMBED_MODEL=nomic-embed-text-v1.5.Q4_K_M.gguf
+      - GOMD_QDRANT_URL=http://qdrant:6333
+      - GOMD_QDRANT_EXTERNAL_URL=http://qdrant.fbi.com
+      - GOMD_S3_BACKUP_ENABLED=true
+      - GOMD_S3_ENDPOINT=http://versitygw:7070
+      - GOMD_S3_EXTERNAL_URL=http://s3.fbi.com
+      - GOMD_S3_BUCKET=gomd-backups
+      - GOMD_S3_ACCESS_KEY=gomdadmin
+      - GOMD_S3_SECRET_KEY=gomdsecret
+      - GOMD_S3_REGION=us-east-1
+      - GOMD_S3_BACKUP_INTERVAL=60
+      - GOMD_S3_RETAIN_COUNT=7
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.gomd.rule=Host(`gomd.fbi.com`)"
+      - "traefik.http.services.gomd.loadbalancer.server.port=3000"
+    depends_on:
+      - qdrant
+    restart: unless-stopped
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "wget",
+          "--no-verbose",
+          "--tries=1",
+          "--spider",
+          "http://localhost:3000/health",
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
+
+  qdrant:
+    image: qdrant/qdrant:latest
+    ports:
+      - "8503:6333"
+    volumes:
+      - ./qdrant_data:/qdrant/storage
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.qdrant.entrypoints=web"
+      - "traefik.http.services.qdrant.loadbalancer.server.port=6333"
+
+  versitygw:
+    image: ghcr.io/versity/versitygw:latest
+    command: posix /data/s3
+    volumes:
+      - ./s3_data:/data/s3
+    environment:
+      - ROOT_ACCESS_KEY=gomdadmin
+      - ROOT_SECRET_KEY=gomdsecret
+      - VGW_PORT=:7070
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.s3.rule=Host(`s3.fbi.com`)"
+      - "traefik.http.routers.s3.entrypoints=web"
+      - "traefik.http.services.s3.loadbalancer.server.port=7070"
+
+  llama-cpp:
+    image: ghcr.io/ggml-org/llama.cpp:server
+    command:
+      - "--hf-repo"
+      - "nomic-ai/nomic-embed-text-v1.5-GGUF"
+      - "--hf-file"
+      - "nomic-embed-text-v1.5.Q4_K_M.gguf"
+      - "--host"
+      - "0.0.0.0"
+      - "--port"
+      - "8080"
+      - "--embedding"
+    volumes:
+      - ./models:/models
+    restart: unless-stopped
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.llm.rule=Host(`llm.fbi.com`)"
+      - "traefik.http.services.llm.loadbalancer.server.port=8080"

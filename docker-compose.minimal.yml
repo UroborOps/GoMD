@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  gomd:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./vault:/app/vault
+    environment:
+      - GOMD_HOST=0.0.0.0
+      - GOMD_RAG_ENABLED=false
+      - GOMD_GIT_ENABLED=false
+      - GOMD_S3_BACKUP_ENABLED=false
