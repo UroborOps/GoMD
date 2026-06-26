@@ -76,7 +76,11 @@ services:
 
   versitygw:
     image: ghcr.io/versity/versitygw:latest
-    command: posix /data/s3
+    command: -a :7071 -w :8080 posix /data/s3
+    ports:
+      - "8504:7070"
+      - "8505:7071"
+      - "8506:8080"
     volumes:
       - ./s3_data:/data/s3
     environment:
@@ -85,9 +89,18 @@ services:
       - VGW_PORT=:7070
     labels:
       - "traefik.enable=true"
+      # S3 API
       - "traefik.http.routers.s3.rule=Host(`s3.fbi.com`)"
       - "traefik.http.routers.s3.entrypoints=web"
       - "traefik.http.services.s3.loadbalancer.server.port=7070"
+      # Admin API
+      - "traefik.http.routers.s3admin.rule=Host(`s3-admin.fbi.com`)"
+      - "traefik.http.routers.s3admin.entrypoints=web"
+      - "traefik.http.services.s3admin.loadbalancer.server.port=7071"
+      # Web UI
+      - "traefik.http.routers.s3ui.rule=Host(`s3-ui.fbi.com`)"
+      - "traefik.http.routers.s3ui.entrypoints=web"
+      - "traefik.http.services.s3ui.loadbalancer.server.port=8080"
 
   llama-cpp:
     image: ghcr.io/ggml-org/llama.cpp:server
